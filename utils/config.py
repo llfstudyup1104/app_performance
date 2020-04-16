@@ -2,7 +2,7 @@
 __version__ = '0.0.1'
 
 import configparser as ConfigParser
-from manual.utils.logger import logger    
+import logger    
 import os
 import traceback
 

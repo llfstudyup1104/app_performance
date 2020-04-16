@@ -1,12 +1,12 @@
-from manual.app import App
-import manual.utils.config as muc
+from app import App
+import utils.config as uc
 import time
 import os
 import re
 import csv
 
 
-cf = muc.Configure()
+cf = uc.Configure()
 page = cf.get_config_value("app", "page")
 activity = cf.get_config_value("app", "activity")
 
