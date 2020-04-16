@@ -128,3 +128,4 @@ if __name__ == '__main__':
     tk = LinuxDevNetConnection(host='10.13.2.111',
                                user='tester',
                                password='byton[]\\')
+    tk.check_connection()
