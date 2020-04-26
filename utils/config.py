@@ -2,10 +2,11 @@
 __version__ = '0.0.1'
 
 import configparser as ConfigParser
-import logger    
+import logging  
 import os
 import traceback
 
+logger = logging.getLogger(__name__)
 
 class Configure(object):
     def __init__(self):
