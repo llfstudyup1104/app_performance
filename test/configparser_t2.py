@@ -14,12 +14,15 @@ class ConfigUtil(object):
         self.config = configparser.ConfigParser()
         self.filename = filename
 
-    def read(self, filename):
+    def read(self):
         """
         读取配置文件
         :param filename: 配置文件路径
         """
         self.config.read(self.filename, encoding="utf-8-sig")
+    
+    def _read_string(self):
+        self.config.read_string(self.read())
     
     def get(self, _options, _section='db'):
         """
@@ -86,14 +89,14 @@ class ConfigUtil(object):
 
 def main():
     configUtil = ConfigUtil(config_file)
-    configUtil.read(config_file)
-    print(configUtil.get("username"))
-    print(configUtil.get_all_section())
-    print(configUtil.assert_section_in_config("server"))
-    print(configUtil.get_options_by_section("es"))
-    print(configUtil.assert_options_in_section("es", "username"))
-    print(configUtil.get_options_key_value("es"))
-    configUtil.set_config_value('server', 'login', 'root')
+    configUtil.read()
+    # print(configUtil.get("username"))
+    # print(configUtil.get_all_section())
+    # print(configUtil.assert_section_in_config("server"))
+    # print(configUtil.get_options_by_section("es"))
+    # print(configUtil.assert_options_in_section("es", "username"))
+    # print(configUtil.get_options_key_value("es"))
+    # configUtil.set_config_value('server', 'login', 'root')
 
 
 if __name__ == '__main__':
