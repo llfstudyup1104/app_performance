@@ -1,30 +1,26 @@
-import logging
-import platform
+import requests
 
-def log_to_syslog(data, logger_name="logger_name", syslog_address="/dev/log", facility=16):
-    if platform.system() != "Linux":
-        logging.info("log_to_syslog() is only supported on Linux")
-        return
-    logger_metrics = logging.getLogger(name=logger_name)
-    formatter_syslog = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    logger_metrics.setLevel(logging.INFO)
+userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.113 Safari/537.36"
+header = {
+    # "origin": "https://jira.byton.com",
+    "Referer": "https://jira.byton.com/login.jsp",
+    'User-Agent': userAgent,
+}
 
-    has_sysloghandler = False
-    for h in logger_metrics.handlers:
-        if isinstance(h, logging.handlers.SysLogHandler):
-            has_sysloghandler = True
-            break
-    if not has_sysloghandler:
-        handler_syslog = logging.handlers.SysLogHandler(syslog_address, facility=facility)
-        handler_syslog.setFormatter(formatter_syslog)
-        logger_metrics.addHandler(handler_syslog)
+def jiraLogin(account, pwd):
+    print("Start to login jira")
+    postUrl = "https://jira.byton.com/login.jsp"
+    postData = {
+        "os_username": account,
+        "os_password": pwd,
+    }
 
-    logger_metrics.info("data: " + str(data))
+    responseRes = requests.post(postUrl, data=postData, headers=header)
+    print(f"statusCode = {responseRes.status_code}")
+    print(f"text = {responseRes.text}")
 
-def main():
-    datas = ['hello, world!', 'hello byton!']
-    for data in datas:
-        log_to_syslog(data)
 
 if __name__ == '__main__':
-    main()
+    login_name = 'longfei.li'
+    login_pwd = 'Byton0903[]\;'
+    jiraLogin(login_name, login_pwd)
