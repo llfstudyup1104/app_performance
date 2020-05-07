@@ -270,7 +270,7 @@ class LinuxDevNetConnection(object):
             total_seconds = None
         return total_seconds
     
-    def send_interactive_command(self, command, prom='#', timeout= 120):
+    def send_interactive_command(self, command, prom='#', timeout= 10):
         ch = self.ssh_obj.invoke_shell()
         ch.settimeout(5)
         ch.send(command)
@@ -280,7 +280,7 @@ class LinuxDevNetConnection(object):
         while True:
             time.sleep(0.2)
             try:
-                tmp = ch.recv(1024)
+                tmp = ch.recv(10240)
             except Exception as err:
                 logger.warning(
                     f'Recevie promt error by {err}\n{rst}')
@@ -288,6 +288,7 @@ class LinuxDevNetConnection(object):
             rst += tmp.decode('utf-8')
             if prom in rst:
                 ret = True
+                logger.info("successsssssssssssssssssssssssss")
                 break
             elif (time.time() - s_time) > float(timeout):
                 logger.info(
@@ -297,51 +298,12 @@ class LinuxDevNetConnection(object):
         logger.debug('output after input {0}: {1}'.format(command, rst))
         return rst
 
-    def byton_log_path(self):
-        v = self.software_version
-        try:
-            bd_num = int(v.split('_')[2])
-            bd_ver = float(v.split('_')[0][3:])
-        except Exception as err:
-            logger.info(f'get build num err by {err}')
-            bd_num = 999
-            bd_ver = 0.1
-        if bd_ver >= 0.5:
-            if bd_num < 699:
-                bl_path = '/var/log/slog2'
-            else:
-                bl_path = '/var/log/bytonlogs/slog2'
-        else:
-            bl_path = '/var/log/bytonlogs/slog2'
-        return bl_path
-
-
-    def start_capture_byton_qnx_log(self, rep=None):
-        self.close()
-        self.connect()
-        self.tmp_log_path = "/var/file.txt"
-        self.send_command(f"rm -f {self.tmp_log_path}")
-        bl_path = '/var/log/bytonlogs/slog2'
-        if rep:
-            cmd = f"tail -f {bl_path} |grep -E '{rep}' > {self.tmp_log_path} &\r"
-        else:
-            cmd = f"tail -f {bl_path} > {self.tmp_log_path} &\r"
-        ret = self.send_interactive_command(cmd)
-        self.use_tmp_log = True if ret is not None else False
-        return ret
-
 
 if __name__ == '__main__':
-    tk = LinuxDevNetConnection(host='192.168.111.60',
-                               user='root',
-                               password='')
+    tk = LinuxDevNetConnection(host='10.13.2.111',
+                               user='tester',
+                               password='byton[]\\')
     tk.connect()
-    
-    reg = 'SLOG2_INFO'
-
-    start_time = time.time()
-    print('Action: {}'.format(start_time))
-
-    if tk.start_capture_byton_qnx_log(reg):
-        end_time = time.time()
-        print('End: {}'.format(end_time))
+    cmd = 'sudo reboot'
+    prompt = 'closed'
+    tk.send_interactive_command(cmd, prompt)

@@ -1,12 +1,23 @@
-import http.cookiejar
-import urllib.request
 import os
+import io
 
 
 parent_path = os.path.dirname(__file__)
-filename = os.path.join(parent_path, 'cookie.txt')
-cookie=http.cookiejar.MozillaCookieJar(filename=filename) #创建保存cookie的实例，保存浏览器类型的Mozilla的cookie格式
-handler=urllib.request.HTTPCookieProcessor(cookie) #构建一个handler
-opener=urllib.request.build_opener(handler) #构建Opener
-response=opener.open('http://www.baidu.com') #请求
-cookie.save(ignore_discard=True, ignore_expires=True) #保存cookie
+file_name = os.path.join(parent_path,'cookie.txt')
+print(file_name)
+
+fo = open(file_name, 'rb')
+str = fo.read(10)
+print(f'Reading Strs are: {str}')
+
+position = fo.tell()
+print(f'Current position: {position}')
+
+str = fo.seek(0, io.SEEK_END)
+position = fo.tell()
+print(f'Current position: {position}')
+
+str = fo.seek(-1, io.SEEK_END)
+position = fo.tell()
+print(f'Current position: {position}')
+fo.close()
